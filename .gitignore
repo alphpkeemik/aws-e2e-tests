@@ -5,3 +5,4 @@
 .whoami
 cdk.out
 cdk/bin/env.ts
+node_modules/
