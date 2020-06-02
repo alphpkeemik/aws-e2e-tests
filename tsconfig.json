@@ -33,7 +33,7 @@
   },
   "include": [
     "cdk/bin/cdk.ts",
-    "cdk/lib/dev/lambdas/*.ts"
+    "cdk/dev/lambdas/*.ts"
   ],
   "exclude": [
     "node_modules",

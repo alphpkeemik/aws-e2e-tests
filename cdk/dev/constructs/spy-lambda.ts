@@ -6,6 +6,7 @@ import path from 'path';
 
 import { LambdaProps } from '../../lib/constructs/lambdas';
 import { PossibleSnsTopics } from '../../lib/constructs/sns-topics';
+import {policyForSns, policyLogs, policyForDynamoRW} from "../../lib/constructs/policies";
 
 type LambdaCreator =
     (x: NeededTables) => (y: SpyLambdaTopics) => LambdaProps;
@@ -24,15 +25,20 @@ export const createSpyLambda: LambdaCreator =
 // @ts-ignore
     ({ spyTable }) => ({ SNS_TOPIC_ERRORS }) => {
         // TODO: Step 2.3 Add policies for 'SNS, DynamoDB and logs'
-        const policies: IAM.PolicyStatement[] = [];
+        const policies: IAM.PolicyStatement[] = [
+            policyForSns([SNS_TOPIC_ERRORS.topicArn]),
+            policyLogs(),
+            policyForDynamoRW([spyTable.tableArn])
+        ];
 
         // TODO: Step 2.3. Define environment vars used by the lambda!
         const environmentVars = {
             NODE_ENV: 'dev',
+            SPY_TABLE_NAME: spyTable.tableName,
         };
 
         // TODO: Step 2.3: Add an SnsEventSource trigger for the error topic!
-        const triggers: SnsEventSource[] = [];
+        const triggers: SnsEventSource[] = [new SnsEventSource(SNS_TOPIC_ERRORS)];
 
         return {
             assetFolder: path.join(__dirname, '../lambdas'),
