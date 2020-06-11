@@ -4,7 +4,7 @@ import {sleep} from './sleep';
 
 import {StackConfig} from '../test-aws-config';
 
-type SnsTopicSpy = (topicName: string) => {
+type SnsTopicSpy = (sortKey: string) => {
     for: (domain: string) => Promise<PromiseResult<DynamoDB.DocumentClient.GetItemOutput, AWSError>>;
 };
 
@@ -89,9 +89,9 @@ const expectToFindBatchData:
 
 export const testSpy: (props: { documentClient: DynamoDB.DocumentClient, stackConfig: StackConfig }) => TestSpy =
     ({documentClient, stackConfig}) => ({
-        snsTopic: topicName => ({
+        snsTopic: sortKey => ({
             for: async domain => {
-                return expectToFindData(documentClient)(5)({pk: domain, sk: topicName}, stackConfig.SpyTableName);
+                return expectToFindData(documentClient)(5)({pk: domain, sk: sortKey}, stackConfig.SpyTableName);
             },
         }),
         errorsTable: () => ({
