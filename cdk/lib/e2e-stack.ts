@@ -19,7 +19,7 @@ export interface StackTopicProps {
 }
 
 export const createStack: (stack: CDK.Stack, p: CreateStackProps) => void =
-    (scope, {topics: {SNS_TOPIC_ERRORS}, tables, envVars}) => {
+    (scope, {topics: {SNS_TOPIC_ERRORS, SNS_START, SNS_TOPIC_SUCCESS}, tables, envVars}) => {
         const {resourcesTable, errorsTable} = tables;
 
         const lambdaprod1 = createLambda
@@ -36,7 +36,10 @@ export const createStack: (stack: CDK.Stack, p: CreateStackProps) => void =
         (scope)
         ({envVars})
 
-        (calls3rdPartyApi({envVars})({resourcesTable}));
+        (calls3rdPartyApi({envVars})
+        ({errorsTable, resourcesTable})
+        ({SNS_TOPIC_ERRORS, SNS_START, SNS_TOPIC_SUCCESS})
+        );
 
         // TODO: Add a function to 'calls3rdPartyAPI', import commented above
 

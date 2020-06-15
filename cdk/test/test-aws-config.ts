@@ -2,7 +2,11 @@ import AWS from 'aws-sdk';
 
 export const region: string = process.env.DEFAULT_AWS_REGION || process.env.AWS_REGION || 'eu-central-1';
 
-export type StackConfigKeys = 'snsErrorTopic' | 'ResourcesTable' | 'SpyTableName' | 'ErrorsTable' | 'lambdaThatFails';
+export type StackConfigKeys = 'snsErrorTopic' | 'ResourcesTable' | 'SpyTableName' | 'ErrorsTable' | 'lambdaThatFails'
+    | 'xTopicArn'
+    | 'xTopicName'
+    | 'fakeAPIUrl'
+    ;
 
 export type StackConfigProps = { [key in StackConfigKeys]: string };
 export interface LambdaNames {

@@ -70,3 +70,21 @@ addCfnOutput(permanentResources)('ResourcesTable')({
     value: resourcesTable.tableName,
     exportName: `${stack.stackName}:Table:ResourcesTable`,
 });
+
+
+//publish to that in our test
+addCfnOutput(stack)('xTopicArn')({
+    value: topics.SNS_START.topicArn,
+    exportName: `${stack.stackName}:SNS:xTopicArn`,
+});
+//Listen that in our test
+addCfnOutput(stack)('xTopicName')({
+    value: topics.SNS_TOPIC_SUCCESS.topicName,
+    exportName: `${stack.stackName}:SNS:xTopicName`,
+});
+/*
+addCfnOutput(permanentResources)('fakeAPIUrl')({
+    value: fakeApi.url,
+    exportName: `${stack.stackName}:url:fakeAPIUrl`,
+});
+*/

@@ -21,9 +21,9 @@ interface E2EStackOutput {
 
 export const addTestResources: (stack: CDK.Stack, p: TestResourcesProps) => E2EStackOutput =
     (scope, {topics, envVars}) => {
-        const {SNS_TOPIC_ERRORS} = topics;
+        const {SNS_TOPIC_ERRORS, SNS_START, SNS_TOPIC_SUCCESS} = topics;
         const spyTable = getDynamoDBTable(scope, `spy-table`)
-        createLambda(scope)({envVars})(createSpyLambda({spyTable})({SNS_TOPIC_ERRORS}));
+        createLambda(scope)({envVars})(createSpyLambda({spyTable})({SNS_TOPIC_ERRORS, SNS_START, SNS_TOPIC_SUCCESS}));
 
         return {spyTable};
     };

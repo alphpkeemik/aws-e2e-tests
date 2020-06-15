@@ -50,7 +50,8 @@ export const handler: Handler<SNSEvent, { statusCode: number, body: string }> =
 
                         const successsnsarn = process.env.SUCCESS_SNS_ARN;
                         await new SNS({region})
-                            .publish({Message: JSON.stringify(body), TopicArn: successsnsarn})
+                            // actual business code expects to have domain in messages
+                            .publish({Message: JSON.stringify({domain: domain, ...body}), TopicArn: successsnsarn})
                             .promise();
                     }
                 }

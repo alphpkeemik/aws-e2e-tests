@@ -34,7 +34,7 @@ export const calls3rdPartyApi: LambdaCreator =
             ...envVars,
             RESOURCE_TABLE_NAME: resourcesTable.tableName,
             ERRORS_SNS_ARN: SNS_TOPIC_ERRORS.topicArn,
-            SUCCESS_SNS_ARN: SNS_TOPIC_ERRORS.topicArn,
+            SUCCESS_SNS_ARN: SNS_TOPIC_SUCCESS.topicArn,
         };
 
         const triggers: SnsEventSource[] = [ new SnsEventSource(SNS_START)];

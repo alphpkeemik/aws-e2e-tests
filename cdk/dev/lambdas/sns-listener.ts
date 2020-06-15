@@ -28,7 +28,7 @@ export const handler: Handler<SNSEvent, { statusCode: number, body: string }> =
                     const addSpyEvent: DynamoDB.DocumentClient.PutItemInput = {
                         TableName: process.env.SPY_TABLE_NAME || 'a-random-table-that-probably-does-not-exist',
                         Item: {
-                            pk: message.domain,
+                            pk: message.domain || 'unknown-domain',
                             sk: topic,
                             data: message,
                         },

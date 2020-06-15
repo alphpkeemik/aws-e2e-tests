@@ -95,6 +95,37 @@ describe('Scaffold - first E2E test', () => {
             return new Promise(resolve => resolve());
         }).timeout(10000)
 
+        it('external api test', async () => {
+
+
+            // Arrange --> put data to DynamoDB!!
+            // when empty then goes further
+            await setup.addResource({domain, data: {api: null}}).save();
+               console.log("added api url to db")
+
+
+
+            // Act --> Invoke the function
+            // add data to sns topic
+           await execute.publishSns({
+                message: {
+                    domain: domain,
+                    merchant_id: 12
+                }
+            }).to(stackConfig.xTopicArn)
+            console.log("data added to sns topic")
+
+
+            // Assert. -> Wait for some time for a lambda to push events to SNS & spy to push to DynamoDb
+            const res = await spy.snsTopic(stackConfig.xTopicName).for(domain);
+            console.log(res)
+
+            expect(res.Item?.data).to.eql({domain, data: {error: 'foobar'}});
+
+
+            return new Promise(resolve => resolve());
+        }).timeout(10000)
+
     });
 
 

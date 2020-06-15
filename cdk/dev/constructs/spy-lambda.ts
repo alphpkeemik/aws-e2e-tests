@@ -17,10 +17,12 @@ interface NeededTables {
 
 export interface SpyLambdaTopics extends PossibleSnsTopics {
     SNS_TOPIC_ERRORS: SNS.ITopic;
+    SNS_TOPIC_SUCCESS: SNS.ITopic;
+    SNS_START: SNS.ITopic;
 }
 
 export const createSpyLambda: LambdaCreator =
-    ({ spyTable }) => ({ SNS_TOPIC_ERRORS }) => {
+    ({ spyTable }) => ({ SNS_TOPIC_ERRORS,SNS_TOPIC_SUCCESS }) => {
         const policies: IAM.PolicyStatement[] = [
             policyForSns([SNS_TOPIC_ERRORS.topicArn]),
             policyLogs(),
@@ -31,7 +33,11 @@ export const createSpyLambda: LambdaCreator =
             SPY_TABLE_NAME: spyTable.tableName,
         };
 
-        const triggers: SnsEventSource[] = [ new SnsEventSource(SNS_TOPIC_ERRORS)];
+        const triggers: SnsEventSource[] = [
+            new SnsEventSource(SNS_TOPIC_ERRORS),
+            new SnsEventSource(SNS_TOPIC_SUCCESS),
+        ];
+
 
         return {
             assetFolder: path.join(__dirname, '../lambdas'),
