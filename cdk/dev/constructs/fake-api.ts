@@ -54,6 +54,7 @@ export const createFakeApi:
             proxyResource.addMethod('Any', new ApiGateway.LambdaIntegration(fakeLambda));
 
             const urlForFakeRoot = `${api.url}${resource.path.split('/')[1]}`;
+            // adds fake api lambda to cloud formation
             new CDK.CfnOutput(scope, `${lambdaName}Api`, {
                 value: urlForFakeRoot,
                 exportName: `${scope.stackName}:${lambdaName}URL`,

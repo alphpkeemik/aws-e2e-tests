@@ -66,8 +66,8 @@ describe('Scaffold - first E2E test', () => {
 
 
             // Assert. -> Wait for some time for a lambda to push events to SNS & spy to push to DynamoDb
-            const res = await spy.snsTopic('errors-dev').for(domain);
-            expect(res.Item?.data).to.eql({domain, data: {error: domain}});
+            const res = await spy.snsTopic('errors-matia').for(domain);
+            expect(res.Item?.data).to.eql({domain, data: {error: 'foobar'}});
 
             return new Promise(resolve => resolve());
         }).timeout(10000);
@@ -90,7 +90,7 @@ describe('Scaffold - first E2E test', () => {
             expect(items.length).to.eql(1);
 
             const {data: d, domain: dom} = items[0]
-            expect({data: d, domain: dom}).to.eql({data: {error: domain}, domain})
+            expect({data: d, domain: dom}).to.eql({data: {error: 'foobar'}, domain})
 
             return new Promise(resolve => resolve());
         }).timeout(10000)

@@ -10,3 +10,6 @@ cdk/bin/env.ts
 .python-version
 .whoami
 dist
+node_modules/
+cdk/**/*.d.ts
+cdk/**/*.js

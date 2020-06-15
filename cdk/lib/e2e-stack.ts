@@ -6,7 +6,7 @@ import {createLambda, EnvVars} from "./constructs/lambdas";
 import {failsMiserablyLambda} from "./constructs/lambdas/fails-miserably";
 import {errorLogger} from "./constructs/lambdas/error-logger";
 import {addCfnOutput} from "./constructs/cfn-output";
-// import {calls3rdPartyApi} from "./constructs/lambdas/calls-3rd-party-api";
+ import {calls3rdPartyApi} from "./constructs/lambdas/calls-3rd-party-api";
 
 export interface CreateStackProps {
     topics: AllSnsTopics;
@@ -19,18 +19,24 @@ export interface StackTopicProps {
 }
 
 export const createStack: (stack: CDK.Stack, p: CreateStackProps) => void =
-    (scope, {topics: {SNS_TOPIC_ERRORS}, tables}) => {
+    (scope, {topics: {SNS_TOPIC_ERRORS}, tables, envVars}) => {
         const {resourcesTable, errorsTable} = tables;
 
         const lambdaprod1 = createLambda
         (scope)
-        ({envVars: {NODE_ENV: 'dev'}})
+        ({envVars})
         (failsMiserablyLambda({resourcesTable})({SNS_TOPIC_ERRORS}));
 
         createLambda
         (scope)
-        ({envVars: {NODE_ENV: 'dev'}})
-        (errorLogger({errorsTable})({SNS_TOPIC_ERRORS}));
+        ({envVars})
+        (errorLogger({errorsTable} )({SNS_TOPIC_ERRORS}));
+
+        createLambda
+        (scope)
+        ({envVars})
+
+        (calls3rdPartyApi({envVars})({resourcesTable}));
 
         // TODO: Add a function to 'calls3rdPartyAPI', import commented above
 

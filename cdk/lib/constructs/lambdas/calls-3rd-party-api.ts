@@ -8,7 +8,7 @@ import {EnvVars, LambdaProps} from '../lambdas';
 import {policyForDynamoRW, policyForSns, policyLogs} from '../policies';
 import {PossibleSnsTopics} from '../sns-topics';
 
-type LambdaCreator = (envVars: EnvVars) =>
+type LambdaCreator = ({envVars}: {envVars: EnvVars}) =>
     (x: NeededTables) => (y: Topics) => LambdaProps;
 
 interface NeededTables extends PossibleTables {
@@ -22,7 +22,7 @@ export interface Topics extends PossibleSnsTopics {
 }
 
 export const calls3rdPartyApi: LambdaCreator =
-    envVars => ({resourcesTable}) => ({SNS_TOPIC_ERRORS, SNS_TOPIC_SUCCESS, SNS_START}) => {
+    ({envVars }) => ({resourcesTable}) => ({SNS_TOPIC_ERRORS, SNS_TOPIC_SUCCESS, SNS_START}) => {
 
         const policies: IAM.PolicyStatement[] = [
             policyLogs(),

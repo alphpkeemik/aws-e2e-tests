@@ -26,6 +26,8 @@ const createTopic: (stack: CDK.Stack, id: string) => SNS.ITopic =
 export const createTopics: (stack: CDK.Stack) => AllSnsTopics =
     stack => {
         return {
-            SNS_TOPIC_ERRORS: createTopic(stack, "errors")
+            SNS_TOPIC_ERRORS: createTopic(stack, "errors"),
+            SNS_START: createTopic(stack, 'start'),
+            SNS_TOPIC_SUCCESS: createTopic(stack, 'success')
         };
     };

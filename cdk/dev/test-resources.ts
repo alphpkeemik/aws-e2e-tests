@@ -4,26 +4,28 @@ import * as DynamoDB from '@aws-cdk/aws-dynamodb';
 import {createSpyLambda, SpyLambdaTopics} from './constructs/spy-lambda';
 import {env} from "../bin/env";
 import {AllTables} from "../lib/constructs/dynamodb";
-import {createLambda} from "../lib/constructs/lambdas";
+import {createLambda, EnvVars} from "../lib/constructs/lambdas";
 import {addCfnOutput} from "../lib/constructs/cfn-output";
 
 export interface TestResourcesProps {
     topics: SpyLambdaTopics;
     tables: AllTables;
     spyTable: DynamoDB.ITable;
+    envVars: EnvVars
 }
 
 // tslint:disable-next-line:no-empty-interface
 interface E2EStackOutput {
+    spyTable: DynamoDB.ITable
 }
 
 export const addTestResources: (stack: CDK.Stack, p: TestResourcesProps) => E2EStackOutput =
-    (scope, {topics}) => {
+    (scope, {topics, envVars}) => {
         const {SNS_TOPIC_ERRORS} = topics;
         const spyTable = getDynamoDBTable(scope, `spy-table`)
-        createLambda(scope)({envVars: {NODE_ENV: 'dev'}})(createSpyLambda({spyTable})({SNS_TOPIC_ERRORS}));
+        createLambda(scope)({envVars})(createSpyLambda({spyTable})({SNS_TOPIC_ERRORS}));
 
-        return {};
+        return {spyTable};
     };
 
 
@@ -45,12 +47,12 @@ export const createTable: (scope: CDK.Stack, id: string, props: { tableName: str
 export const createTestTables: (stack: CDK.Stack) => E2EStackOutput =
     (scope) => {
         const spyTableName = `spy-table-${env}`
-        createTable(scope, spyTableName, {tableName: spyTableName});
+       const spyTable = createTable(scope, spyTableName, {tableName: spyTableName});
 
         addCfnOutput(scope)('SpyTableName')({
             value: spyTableName,
             exportName: `${ scope.stackName }:Table:SpyTableName`,
         });
 
-        return {};
+        return {spyTable};
     };
